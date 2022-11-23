@@ -14,7 +14,7 @@ class item:
     @amount.setter
     def amount(self, new_amount):
         if new_amount > 0:
-            self.__class__.count = new_amount - self._amount
+            self.__class__.count += new_amount - self._amount
             self._amount = new_amount
 
     def __str__(self):
@@ -26,8 +26,6 @@ class Food(item):
     def __init__(self, name, taste, price, amount=1):
         super().__init__(name, price, amount)
         self.taste = taste
-        self._amount = amount
-        self.__class__.count += self.amount
 
     def __str__(self):
         return f'{self.name} ({self.taste}, {self.__price} руб, {self.amount} на складе)'
