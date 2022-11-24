@@ -1,3 +1,5 @@
+from abc import abstractmethod
+
 class item:
     count = 0
 
@@ -20,8 +22,48 @@ class item:
     def __str__(self):
         return f'{self.name} ({self.price}), {self.amount} на складе'
 
+#---------------------------------------------------------------------------------------
+# интерфейсы
 
-class Food(item):
+class IConsumable:
+    @abstractmethod
+    def consume(self):
+        pass
+
+class ICookable:
+    @abstractmethod
+    def cook(self):
+        pass
+
+class IBrewable:
+    @abstractmethod
+    def brew(self):
+        pass
+
+#---------------------------------------------------------------------------------------
+
+
+class ItemFileExporter:
+
+    def __init__(self, filename):
+        self._filename = filename
+
+    def export(self, items):
+        file = open(self._filename, 'w', encoding ='utf-8')
+        for item in items:
+            print(item, file = file)
+        file.close()
+
+class CSVItemFileExporter(ItemFileExporter):
+
+    def export(self, items):
+        file = open(self._filename, 'w', encoding='utf-8')
+        for item in items:
+            print(item.name, item.price, item.count, sep=',', file=file)
+        file.close()
+#---------------------------------------------------------------------------------------
+
+class Food(item, IConsumable, ICookable):
 
     def __init__(self, name, taste, price, amount=1):
         super().__init__(name, price, amount)
@@ -59,9 +101,14 @@ class Food(item):
     def price(self, new_price):
         if 10 <= new_price <= 20000:
             self.__price = new_price
+
+    def cook(self):
+        pass
+
+
 #---------------------------------------------------------------------------------------
 
-class Drink(item):
+class Drink(item, IConsumable, IBrewable):
 
     def __init__(self, name, drink_type, price, amount=1):
         super().__init__(name, price, amount)
@@ -81,21 +128,30 @@ class Drink(item):
             self.__class__.count -= 1
         else:
             print(f'we have no {self.name}')
+
+    def brew(self):
+        pass
 #------------------------------------------------------------------------------------------
 
 cake_1 = Food('Торт', 'вкусный', 120, 5)
-cake_2 = Food('Торт', 'вкусный', 213, 4)
-latte = Drink('Латте', 'Кофе', 220, 2)
+cake_2 = Food('Торт', 'очень вкусный', 213, 4)
+latte = Drink('Латте', 'Кофе', 230, 2)
 kvass = Drink('Натуральный', 'Квас', 150, 4)
-sushi = Food('Суши', 'вегетарианские', 390, 12)
+sushi = Food('Суши', 'вегетарианские', 391, 12)
 cake_1.name = 'Тортик'
 dual_sense = item('DualSense 5', 7000)
+cake_1.amount += 5
 
+exporter = ItemFileExporter('items.txt')
+table_exporter = CSVItemFileExporter('items.csv')
 #------------------------------------------------------------------------------------------
 
 for item in cake_1, cake_2, sushi, latte, kvass, dual_sense:
-     #item.consume()
+    #item.consume()
     print(item)
+
+exporter.export([cake_1, cake_2, sushi, latte, kvass, dual_sense])
+table_exporter.export([cake_1, cake_2, sushi, latte, kvass, dual_sense])
 
 # print(cake_1 == cake_2)
 # print(sushi)
