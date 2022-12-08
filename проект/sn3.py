@@ -63,7 +63,7 @@ class user(IShowable, IFollowable):
             followed_username.followers.append(f'{self.username}')
 
 
-    def show(self):
+    def show_follow(self):
         print(self.username, "'s followers:", sep='')
         for i in self.followers:
             print(i)
