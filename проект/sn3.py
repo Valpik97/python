@@ -55,9 +55,9 @@ class user(IShowable, IFollowable):
         self.status = status
 
 
-    def follow(self, followed_username) -> None:
+    def follow(self, followed_username, followed_username_str):
         if followed_username not in self.following:
-            self.following.append(f'{followed_username}')
+            self.following.append(followed_username_str)
             self.following_amount += 1
             followed_username.followers_amount += 1
             followed_username.followers.append(f'{self.username}')
@@ -89,9 +89,7 @@ class Place_of_study(user, IShowable):
                 self.students.append(f'{i}')
 
     def __str__(self):
-        for j in self.students:
-            return f'{self.naming} \n students:{j}'
-
+            return f'{self.students}'
 
 
 
@@ -109,9 +107,13 @@ newchat.send_message(m2)
 newchat.show()
 print()
 
-Alex.follow(Tom)
+Alex.follow(Tom, 'Tom')
+print()
 Tom.show_follow()
 Alex.show_follow()
+print()
+
+print()
 
 Itmo = Place_of_study('Itmo')
 print(Itmo)
