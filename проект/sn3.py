@@ -56,6 +56,7 @@ class user(IShowable, IFollowable):
 
 
     def follow(self, followed_username) -> None:
+        if followed_username not in self.following:
             self.following.append(f'{followed_username}')
             self.following_amount += 1
             followed_username.followers_amount += 1
