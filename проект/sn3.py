@@ -110,8 +110,8 @@ newchat.show()
 print()
 
 Alex.follow(Tom)
-Tom.show()
-Alex.show()
+Tom.show_follow()
+Alex.show_follow()
 
 Itmo = Place_of_study('Itmo')
 print(Itmo)
