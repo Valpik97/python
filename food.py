@@ -1,5 +1,6 @@
 from abc import abstractmethod
 
+
 class item:
     count = 0
 
@@ -18,11 +19,14 @@ class item:
         if new_amount > 0:
             self.__class__.count += new_amount - self._amount
             self._amount = new_amount
+        else:
+            raise ValueError("Cannot save negative amount")
 
     def __str__(self):
         return f'{self.name} ({self.price}), {self.amount} на складе'
 
-#---------------------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------------------
 # интерфейсы
 
 class IConsumable:
@@ -30,17 +34,20 @@ class IConsumable:
     def consume(self):
         pass
 
+
 class ICookable:
     @abstractmethod
     def cook(self):
         pass
+
 
 class IBrewable:
     @abstractmethod
     def brew(self):
         pass
 
-#---------------------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------------------
 
 
 class ItemFileExporter:
@@ -49,10 +56,11 @@ class ItemFileExporter:
         self._filename = filename
 
     def export(self, items):
-        file = open(self._filename, 'w', encoding ='utf-8')
+        file = open(self._filename, 'w', encoding='utf-8')
         for item in items:
-            print(item, file = file)
+            print(item, file=file)
         file.close()
+
 
 class CSVItemFileExporter(ItemFileExporter):
 
@@ -61,7 +69,9 @@ class CSVItemFileExporter(ItemFileExporter):
         for item in items:
             print(item.name, item.price, item.count, sep=',', file=file)
         file.close()
-#---------------------------------------------------------------------------------------
+
+
+# ---------------------------------------------------------------------------------------
 
 class Food(item, IConsumable, ICookable):
 
@@ -106,7 +116,7 @@ class Food(item, IConsumable, ICookable):
         pass
 
 
-#---------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------
 
 class Drink(item, IConsumable, IBrewable):
 
@@ -131,9 +141,11 @@ class Drink(item, IConsumable, IBrewable):
 
     def brew(self):
         pass
-#------------------------------------------------------------------------------------------
 
-cake_1 = Food('Торт', 'вкусный', 120, 5)
+
+# ------------------------------------------------------------------------------------------
+
+cake_1 = Food('Торт', 'вкусный', 120, 1)
 cake_2 = Food('Торт', 'очень вкусный', 213, 4)
 latte = Drink('Латте', 'Кофе', 230, 2)
 kvass = Drink('Натуральный', 'Квас', 150, 4)
@@ -144,10 +156,10 @@ cake_1.amount += 5
 
 exporter = ItemFileExporter('items.txt')
 table_exporter = CSVItemFileExporter('items.csv')
-#------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------
 
 for item in cake_1, cake_2, sushi, latte, kvass, dual_sense:
-    #item.consume()
+    # item.consume()
     print(item)
 
 exporter.export([cake_1, cake_2, sushi, latte, kvass, dual_sense])
