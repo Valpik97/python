@@ -1,50 +1,62 @@
 import gc
-from abc import abstractmethod
+from abc import abstractmethod, ABC
+
 
 class IShowable:
     @abstractmethod
     def show(self):
         pass
 
+
 class ISendable:
     @abstractmethod
     def send(self):
         pass
+
 
 class IFollowable:
     @abstractmethod
     def follow(self):
         pass
 
-class chat(IShowable, ISendable):
 
-    def __init__(self, chat_name, usernames = [], messages = []):
+class chat(IShowable, ISendable, ABC):
+
+    def __init__(self, chat_name: str, usernames: list = None, messages: list = None) -> None:
+        if usernames is None:
+            usernames = []
+        if messages is None:
+            messages = []
         self.chat_name = chat_name
         self.usernames = usernames
         self.messages = messages
 
-    def send_message(self, message_name):
+    def send_message(self, message_name) -> None:
         self.messages.append(f"{message_name.user.username}: \n {message_name.message} \n ({message_name.send_time})")
 
-    def show(self):
+    def show(self) -> None:
         for i in self.messages:
             print(i)
 
 
-class Message(chat):
+class Message(chat, ABC):
 
-    def __init__(self, chat_name, user, to_username, send_time, message):
+    def __init__(self, chat_name, user_, to_username, send_time: str, message: str) -> None:
         super().__init__(chat_name)
-        self.user = user
+        self.user = user_
         self.send_time = send_time
         self.to_username = to_username
         self.message = message
 
 
-class user(IShowable, IFollowable):
+class user(IShowable, IFollowable, ABC):
 
-    def __init__(self, username, birthday, place_of_study, status, followers_amount = 0, followers = [],
-                 following_amount = 0, following=[]):
+    def __init__(self, username: str, birthday: str, place_of_study: str, status: str, followers_amount: int = 0,
+                 followers: list = None, following_amount: int = 0, following: list = None) -> None:
+        if followers is None:
+            followers = []
+        if following is None:
+            following = []
         self.followers = followers
         self.following = following
         self.followers_amount = followers_amount
@@ -54,16 +66,14 @@ class user(IShowable, IFollowable):
         self.place_of_study = place_of_study
         self.status = status
 
-
-    def follow(self, followed_username, followed_username_str):
+    def follow(self, followed_username, followed_username_str: str) -> None:
         if followed_username not in self.following:
             self.following.append(followed_username_str)
             self.following_amount += 1
             followed_username.followers_amount += 1
             followed_username.followers.append(f'{self.username}')
 
-
-    def show_follow(self):
+    def show_follow(self) -> None:
         print(self.username, "'s followers:", sep='')
         for i in self.followers:
             print(i)
@@ -71,16 +81,18 @@ class user(IShowable, IFollowable):
         for i in self.following:
             print(i)
 
-
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.username} |{self.status}| \n' \
                f' {self.followers_amount} followers | {self.following_amount} following \n' \
                f' birthday - {self.birthday} \n' \
                f' place of study - {self.place_of_study}'
 
-class Place_of_study(user, IShowable):
 
-    def __init__(self, naming, students_amount = 0, students = []):
+class Place_of_study(user, IShowable, ABC):
+
+    def __init__(self, naming: str, students_amount: int = 0, students: list = None) -> None:
+        if students is None:
+            students = []
         self.naming = naming
         self.students_amount = students_amount
         self.students = students
@@ -88,9 +100,8 @@ class Place_of_study(user, IShowable):
             if isinstance(i, user):
                 self.students.append(f'{i}')
 
-    def __str__(self):
-            return f'{self.students}'
-
+    def __str__(self) -> str:
+        return f'{self.students}'
 
 
 Alex = user('Alex', '12.05', 'Itmo', 'Python')
