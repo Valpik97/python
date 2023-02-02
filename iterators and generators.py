@@ -55,25 +55,3 @@ for x in data:
 #     print(x)
 
 
-# таймер
-# class Count:
-#     def __init__(self, start: int, end: int):
-#         self.start = start
-#         self.value: int = start
-#         self.end = end
-#
-#     def __iter__(self):
-#         self.value = self.start
-#         return self
-#
-#     def __next__(self) -> Any:
-#         if self.value == self.end:
-#             print("raising StopIteration")
-#             return
-#         self.value += 1
-#         return self.value
-
-# data = Count(5, 10)
-# for x in data:
-#     print(x)
-#     sleep(1)
